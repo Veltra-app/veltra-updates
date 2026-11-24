@@ -363,5 +363,20 @@
     </div>
     <div class="tip-box info">${I.info}<span>Conseils : un mot de passe diff\xE9rent pour chaque compte, au moins 14 caract\xE8res, et la double authentification activ\xE9e sur tes comptes de jeux (Steam, Epic, Riot, Battle.net\u2026).</span></div>`},B.pwd=()=>{const lk=$("#pwLock");if(lk&&(lk.onclick=()=>show("profile")),!hasPass())return;const o=opts(),re=()=>{st.pwdGen=generate(),rerender()},nw=$("#pwNew");nw&&(nw.onclick=re);const cp=$("#pwCopy");cp&&(cp.onclick=async()=>{try{await navigator.clipboard.writeText(st.pwdGen),toast("Mot de passe copi\xE9.")}catch{toast("Copie impossible : s\xE9lectionne-le et fais Ctrl + C.")}}),document.querySelectorAll("[data-pm]").forEach(b=>b.onclick=()=>{o.mode=b.dataset.pm,re()});const ln=$("#pwLen");ln&&(ln.oninput=()=>{$("#pwLenV").textContent=ln.value},ln.onchange=()=>{o.len=+ln.value,re()});const wd=$("#pwWords");wd&&(wd.oninput=()=>{$("#pwLenV").textContent=wd.value},wd.onchange=()=>{o.words=+wd.value,re()}),document.querySelectorAll("[data-po]").forEach(b=>b.onchange=()=>{o[b.dataset.po]=b.checked,["lower","upper","digits","symbols"].some(k=>o[k])||(o.lower=!0),re()});const inp=$("#pwChk");inp&&(inp.oninput=()=>{st.pwdChk={pw:inp.value};const pos=inp.selectionStart,type=inp.type;rerender();const n=$("#pwChk");n&&(n.type=type,n.focus(),n.setSelectionRange(pos,pos))});const ey=$("#pwEye");ey&&(ey.onclick=()=>{const n=$("#pwChk");n.type=n.type==="password"?"text":"password",ey.innerHTML=n.type==="password"?I.eye:I.eyeOff});const go=$("#pwGo");go&&(go.onclick=async()=>{const pw=(st.pwdChk||{}).pw;pw&&(await busy(go,"V\xE9rification\u2026",async()=>{const r=await V.pwd.check(pw);st.pwdChk={pw,res:r&&r.ok?r:{ok:!1}}}),rerender())})}})();
 </script>
+<script>// Démo du site : le générateur et la vérification des fuites sont réservés au logiciel
+(function () {
+  var s = document.createElement('style');
+  s.textContent = '.pw-out{position:relative}#pwOut{filter:blur(7px);user-select:none;-webkit-user-select:none;pointer-events:none}.pw-out::before{content:"Visible dans le logiciel Veltra";position:absolute;left:14px;top:50%;transform:translateY(-50%);z-index:2;padding:.3rem .7rem;border-radius:999px;background:rgba(8,9,13,.85);border:1px solid rgba(198,255,61,.4);color:#c6ff3d;font-size:.78rem;font-weight:600;pointer-events:none}';
+  document.head.appendChild(s);
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('#pwCopy,#pwGo');
+    if (!b) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    var msg = b.id === 'pwCopy' ? 'Dans la démo, le mot de passe reste masqué. Télécharge Veltra pour l’utiliser.' : 'La vérification des fuites fonctionne dans le logiciel Veltra, pas dans la démo.';
+    if (typeof toast === 'function') toast(msg); 
+  }, true);
+  document.addEventListener('copy', function (e) { if (e.target && e.target.closest && e.target.closest('.pw-out')) e.preventDefault(); }, true);
+})();
+</script>
 </body>
 </html>
